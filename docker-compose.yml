@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  nvim:
+    container_name: nvim
+    build: .
+    security_opt:
+      - seccomp:unconfined
+    tty: true
+    volumes:
+      - ./workspace:/root/workspace
