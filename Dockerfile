@@ -18,7 +18,11 @@ RUN dnf -y update
 # -nodejs
 # -npm
 # -neovim
-RUN dnf -y install git python3 python3-pip nodejs npm neovim gcc gcc-c++
+# -gcc
+# -gcc-c++
+# -tmux
+# -golang
+RUN dnf -y install git python3 python3-pip nodejs npm neovim gcc gcc-c++ tmux
 
 # Install pynvim
 RUN pip3 install pyvim
@@ -40,6 +44,21 @@ RUN mkdir -p /root/.config/coc/extensions
 
 # Install Neovim COC extensions.
 RUN cd /root/.config/coc/extensions && npm install $COC --global-style --ignore-scripts --no-bin-links --no-package-lock --only=prod
+
+# Golang stuff
+RUN dnf -y install golang
+
+# Install Go language server.
+RUN go install golang.org/x/tools/gopls@latest
+
+# Install Neovim COC extensions.
+# RUN cd /root/.config/coc/extensions && npm install $COC --global --only=prod
+
+# Install Go language debugger adapter.
+RUN cd /root/.config/nvim/plugins/vimspector && python3 install_gadget.py --enable-go && go install github.com/go-delve/delve/cmd/dlv@latest
+
+# Copy Neovim configuration files.
+COPY ./config-go/ /root/.config/nvim/
 
 # Avoid container exit
 ENTRYPOINT ["tail", "-f", "/dev/null"]
