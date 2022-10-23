@@ -60,5 +60,11 @@ RUN cd /root/.config/nvim/plugins/vimspector && python3 install_gadget.py --enab
 # Copy Neovim configuration files.
 COPY ./config-go/ /root/.config/nvim/
 
+# Add tmux alias for fix the colors
+RUN echo 'alias tmux="tmux -2"' >> ~/.bashrc
+
+# Project directory
+WORKDIR /root/workspace
+
 # Avoid container exit
 ENTRYPOINT ["tail", "-f", "/dev/null"]
